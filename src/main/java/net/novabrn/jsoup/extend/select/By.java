@@ -77,6 +77,10 @@ public abstract class By<T> {
         @Override
         public Elements findElements(Object node) {
             Elements elements = new Elements();
+            if (node instanceof Elements) {
+                throw new IllegalArgumentException("Type Element can't use this method");
+            }
+
             if (node instanceof Document) {
                 elements = ((Document) node).getElementsByTag(this.tagName);
             } else if (node instanceof Element) {
@@ -100,6 +104,8 @@ public abstract class By<T> {
                 elements = ((Document) node).select(this.cssSelector);
             } else if (node instanceof Element) {
                 elements = ((Element) node).select(this.cssSelector);
+            }else if (node instanceof Elements) {
+                elements = ((Elements) node).select(this.cssSelector);
             }
             return elements;
         }

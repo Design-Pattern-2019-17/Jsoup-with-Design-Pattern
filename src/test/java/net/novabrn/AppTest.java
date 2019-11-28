@@ -2,6 +2,7 @@ package net.novabrn;
 
 import net.novabrn.jsoup.extend.DocumentEx;
 import net.novabrn.jsoup.extend.JsoupEx;
+import net.novabrn.jsoup.extend.factory.NodeExFactory;
 import net.novabrn.jsoup.extend.select.By;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -48,6 +49,18 @@ public class AppTest {
         DocumentEx doc = JsoupEx.connect(url).setTimeout(1000).get();
 
         Elements els = doc.select(By.id("mp-itn"));
+        els = NodeExFactory.create(els).select(By.cssSelector("b a"));
+        assertTrue(els.size() > 0);
+        for (Element headline : els) {
+            System.out.println(String.format("%s\n\t%s", headline.attr("title"), headline.absUrl("href")));
+        }
+    }
+
+    @Test
+    public void JsoupEx3() throws IOException {
+        DocumentEx doc = JsoupEx.connect(url).setTimeout(1000).get();
+
+        Elements els = doc.select(By.id("mp-itn"));
 
         assertTrue(els.size() > 0);
         for (Element headline : els) {
@@ -56,7 +69,7 @@ public class AppTest {
     }
 
     @Test
-    public void JsoupEx3() throws IOException {
+    public void JsoupEx4() throws IOException {
         DocumentEx doc = JsoupEx.connect(url).setTimeout(1000).get();
 
         Elements els = doc.select(By.xpath("//*[@id='mp-itn']/ul/li/b/a"));

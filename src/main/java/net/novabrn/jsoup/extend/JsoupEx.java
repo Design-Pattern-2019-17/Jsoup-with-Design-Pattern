@@ -3,11 +3,9 @@ package net.novabrn.jsoup.extend;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 /**
  * @author 왕천용 WANGZHANYONG
@@ -37,9 +35,16 @@ public class JsoupEx {
         doc = conn.timeout(timeOut).get();
         DocumentEx documentEx = new DocumentEx(doc);
         return documentEx;
-}
+    }
 
     public DocumentEx post() throws IOException {
+        return this.post(null);
+    }
+
+    public DocumentEx post(Map<String, String> args) throws IOException {
+        if (args != null) {
+            conn.data(args);
+        }
         doc = conn.timeout(timeOut).post();
         DocumentEx documentEx = new DocumentEx(doc);
         return documentEx;

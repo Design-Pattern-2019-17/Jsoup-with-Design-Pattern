@@ -1,0 +1,58 @@
+Singleton Pattern
+
+  1.	Helper/DataUtil.java
+    A.	DataUtil 클래스의 생성자를 Private 접근 지정자로 외부에서 접근하지 못하도록 만든 뒤 메쏘드 및 변수(charsetPattern)에 접근할 수 있는 메쏘드(getCharsetFromContentType)를 제공함.
+  2.	Helper/HttpConnection.java
+    A.	KeyVal 클래스의 생성자를 Private 접근 지정자로 외부에서 접근하지 못하도록 만든 뒤 key, value, stream, contentType 변수에 접근할 수 있는 메쏘드 public String key(), public String value(), public InputStream inputStream(), public String contentType() 를 제공함.
+  3.	Select/Selector.java
+    A.	Selector 클래스의 생성자를 Private 접근 지정자로 외부에서 접근하지 못하도록 선언한 뒤 public static Elements select(String query, Element root), public static Elements select(Evaluator evaluator, Element root), public static Elements select(String query, Iterable<Element> roots), public static Element selectFirst(String cssQuery, Element root), public static class SelectorParseException extends IllegalStateException 메쏘드를 외부에서 접근하도록 선언함.
+
+Strategy Pattern
+
+  1.	Select/NodeVisitor.java – public interface NodeVisitor
+    A.	인터페이스 NodeVisitor 는 두 개의 메쏘드를 가지고 있다.
+      i.	void head(Node node, int depth)
+      ii.	void tail(Node node, int depth)
+    B.	사례1. 
+      i.	Examples/HtmlToPlainText.jave - private static class FormattingVisitor implements NodeVisitor
+      ii.	private static class FormattingVisitor implements NodeVisitor 클래스는 public void head(Node node, int depth)  메쏘드와 public void tail(Node node, int depth)  메쏘드를 선언하여 NodeVisitor 인터페이스를 구현. 
+
+Adaptor Pattern
+
+  1.	Select/NodeVisitor.java – public interface NoddeVisitor 
+      With 
+      Helper/W3CDom.java - protected static class W3CBuilder implements NodeVisitor
+    i.	W3CBuilder 클래스의 생성자는 Document 인터페이스를 매개변수로 받음.
+    ii.	W3CBuilder 클래스는 위 생성자에서 매개변수로 받은 Doucument 인터페이스를 this.doc에 할당하고, head 와 tail 메쏘드를 정의함으로써 NodeVisitor 인터페이스와 W3CBuilder 인터페이스 사이의 어댑터 역할을 함.
+
+  2.	Select/NodeVisitor.java – public interface NoddeVisitor 
+      With 
+      nodes/Node.java - private static class OuterHtmlVisitor implements NodeVisitor
+    i.	OuterHtmlVisitor 클래스의 생성자는  Appendable 인터페이스와 Document.OutputSettings 인터페이스를 매개변수로 받음.
+    ii.	W3CBuilder 클래스는 위 생성자에서 매개변수로 받은 Appendable 인터페이스를 this.accoum 에 할당하고, Document.OutputSettings 인터페이스를 this.out 에 할당하여 이 두 변수를 각각 head, tail 메쏘드에 사용하여 NodeVisitor 인터페이스와 다른 두 인터페이스 사이에서 어댑터 역할을 함.
+
+  3.	Select/NodeVisitor.java – public interface NoddeVisitor 
+      With 
+      safety/Cleaner.java - private final class CleaningVisitor implements NodeVisitor
+    iii.	CleaningVisitor 클래스의 생성자는  Element 인터페이스 두 개를 매개변수로 받음.
+    iv.	CleaningVisitor 클래스는 위 생성자에서 매개변수로 받은 두 Element 인터페이스를 this.root, this.destination 에 각각 할당하고, 이 두 변수를 각각 head, tail 메쏘드에 사용하여 NodeVisitor 인터페이스와 다른 두 인터페이스 사이에서 어댑터 역할을 함.
+    
+  4.	Select/NodeVisitor.java – public interface NoddeVisitor 
+      With 
+      safety/Collector.java - private static class Accumulator implements NodeVisitor
+    v.	Accumulator 클래스의 생성자는  Element 인터페이스 두 개와 Evaluator 인터페이스 한개를 매개변수로 받음.
+    vi.	Accumulator 클래스는 위 생성자에서 매개변수로 받은 두 Element 인터페이스를 this.root, this.elements 에 각각 할당하고 Evaluatyor 인터페이스를 eval에 할당한 뒤, 이 세 변수를 각각 head, tail 메쏘드에 사용하여 NodeVisitor 인터페이스와 다른 두 인터페이스 사이에서 어댑터 역할을 함.
+
+Decorator Pattern
+
+  1.	Parser/Tocken.jave - static abstract class Tag extends Token
+      With
+      Parser/Tocken.java - final static class StartTag extends Tag
+    A.	StartTag 클래스의 reset() 메쏘드는 상위 클래스, 즉 Tag 클래스의 reset 메서드를 호출 한 뒤 attributes = new Attributes(); 를 추가로 실행하고 return this.
+
+  2.	Parser/Tocken.jave - static abstract class Tag extends Token
+      With
+      Parser/Tocken.java - final static class EndTag extends Tag
+    A.	EndTag 클래스의 reset() 메쏘드는 상위 클래스, 즉 Tag 클래스의 reset 메서드를 호출 한 뒤 bogus = false; 를 추가로 실행하고 return this;
+
+

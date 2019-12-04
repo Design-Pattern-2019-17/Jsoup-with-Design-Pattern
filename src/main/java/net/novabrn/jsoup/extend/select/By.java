@@ -1,5 +1,8 @@
 package net.novabrn.jsoup.extend.select;
 
+import net.novabrn.jsoup.extend.ElementEx;
+import net.novabrn.jsoup.extend.ElementsEx;
+import net.novabrn.jsoup.extend.factory.NodeExFactory;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -29,12 +32,12 @@ public abstract class By<T> {
         return new ByXPath(xpath);
     }
 
-    public Element findElement(T node) {
-        Elements elements = findElements(node);
+    public ElementEx findElement(T node) {
+        Elements elements = findElements(node).getRootElements();
         if (elements == null || elements.isEmpty()) {
             throw new NoSuchElementException("Cannot locate an element using " + toString());
         }
-        return elements.get(0);
+        return NodeExFactory.create(elements.get(0));
     }
 
     /**
@@ -42,7 +45,7 @@ public abstract class By<T> {
      *
      * @return A list of elements matching the express.
      */
-    public abstract Elements findElements(T node);
+    public abstract ElementsEx findElements(T node);
 
     private static class ById extends By {
         private String id;
@@ -52,7 +55,7 @@ public abstract class By<T> {
         }
 
         @Override
-        public Elements findElements(Object node) {
+        public ElementsEx findElements(Object node) {
             Elements elements = new Elements();
             if (node instanceof Elements) {
                 throw new IllegalArgumentException("Type Element can't use this method");
@@ -63,7 +66,7 @@ public abstract class By<T> {
             } else if (node instanceof Element) {
                 elements.add(((Element) node).getElementById(id));
             }
-            return elements;
+            return NodeExFactory.create(elements);
         }
     }
 
@@ -75,7 +78,7 @@ public abstract class By<T> {
         }
 
         @Override
-        public Elements findElements(Object node) {
+        public ElementsEx findElements(Object node) {
             Elements elements = new Elements();
             if (node instanceof Elements) {
                 throw new IllegalArgumentException("Type Element can't use this method");
@@ -86,7 +89,7 @@ public abstract class By<T> {
             } else if (node instanceof Element) {
                 elements = ((Element) node).getElementsByTag(this.tagName);
             }
-            return elements;
+            return NodeExFactory.create(elements);
         }
     }
 
@@ -98,7 +101,7 @@ public abstract class By<T> {
         }
 
         @Override
-        public Elements findElements(Object node) {
+        public ElementsEx findElements(Object node) {
             Elements elements = new Elements();
             if (node instanceof Document) {
                 elements = ((Document) node).select(this.cssSelector);
@@ -107,7 +110,7 @@ public abstract class By<T> {
             }else if (node instanceof Elements) {
                 elements = ((Elements) node).select(this.cssSelector);
             }
-            return elements;
+            return NodeExFactory.create(elements);
         }
     }
 
@@ -119,7 +122,7 @@ public abstract class By<T> {
         }
 
         @Override
-        public Elements findElements(Object node) {
+        public ElementsEx findElements(Object node) {
             JXDocument jxDocument = null;
             if (node instanceof Document) {
                 jxDocument = JXDocument.create((Document) node);
@@ -137,7 +140,7 @@ public abstract class By<T> {
                     .filter(item -> item instanceof Element)
                     .map(item -> (Element) item)
                     .forEach(result::add);
-            return result;
+            return NodeExFactory.create(result);
         }
     }
 }

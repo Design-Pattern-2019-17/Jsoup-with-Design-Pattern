@@ -36,7 +36,7 @@ public class AppTest {
     public void JsoupEx1() throws IOException {
         DocumentEx doc = JsoupEx.connect(url).setTimeout(1000).get();
 
-        Elements els = doc.select(By.id("#mp-itn b a"));
+        Elements els = doc.select(By.id("#mp-itn b a")).getRootElements();
 
         assertTrue(els.size() > 0);
         for (Element headline : els) {
@@ -47,9 +47,10 @@ public class AppTest {
     @Test
     public void JsoupEx2() throws IOException {
         DocumentEx doc = JsoupEx.connect(url).setTimeout(1000).get();
-
-        Elements els = doc.select(By.id("mp-itn"));
-        els = NodeExFactory.create(els).select(By.cssSelector("b a"));
+        Elements els = doc
+                .select(By.id("mp-itn"))
+                .select(By.cssSelector("b a"))
+                .getRootElements();
         assertTrue(els.size() > 0);
         for (Element headline : els) {
             System.out.println(String.format("%s\n\t%s", headline.attr("title"), headline.absUrl("href")));
@@ -60,7 +61,7 @@ public class AppTest {
     public void JsoupEx3() throws IOException {
         DocumentEx doc = JsoupEx.connect(url).setTimeout(1000).get();
 
-        Elements els = doc.select(By.id("mp-itn"));
+        Elements els = doc.select(By.id("mp-itn")).getRootElements();
 
         assertTrue(els.size() > 0);
         for (Element headline : els) {
@@ -72,7 +73,7 @@ public class AppTest {
     public void JsoupEx4() throws IOException {
         DocumentEx doc = JsoupEx.connect(url).setTimeout(1000).get();
 
-        Elements els = doc.select(By.xpath("//*[@id='mp-itn']/ul/li/b/a"));
+        Elements els = doc.select(By.xpath("//*[@id='mp-itn']/ul/li/b/a")).getRootElements();
 
         assertTrue(els.size() > 0);
         for (Element headline : els) {
